@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.mosadie.islandmenu.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+    "TitleScreenMixin",
+    "ScreenInvoker",
+    "TitleScreenInvoker"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
