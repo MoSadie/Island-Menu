@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.Consumer;
 
 @Mixin(TitleScreen.class)
-public abstract class TitleScreenMixin {
+public abstract class TitleScreenMixin extends ScreenMixin {
     @Shadow @Nullable private String splashText;
 
     @Inject(method = "init()V", at = @At("HEAD"))
@@ -34,7 +34,7 @@ public abstract class TitleScreenMixin {
 
     @Redirect(method = "init()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/TitleScreen;initWidgetsNormal(II)V"))
     private void redirectInitWidgetsNormal(TitleScreen self, int y, int spacingY) {
-        ((ScreenInvoker) this).callAddDrawableChild(new ButtonWidget(self.width / 2 - 100, y, 200, 20, Text.translatable("menu.singleplayer"), (button) -> {
+        this.addDrawableChild_IM(new ButtonWidget(self.width / 2 - 100, y, 200, 20, Text.translatable("menu.singleplayer"), (button) -> {
             MinecraftClient.getInstance().setScreen(new SelectWorldScreen(self));
         }));
 
@@ -50,16 +50,16 @@ public abstract class TitleScreenMixin {
             }
         };
 
-        ((ScreenInvoker) this).callAddDrawableChild(new ButtonWidget(self.width / 2 - 100, y + spacingY, 200, 20, Text.translatable("island-menu.menu,join"), (button) -> {
-            ServerAddress serverAddress = ServerAddress.parse("localhost"); //FIXME play.mccisland.net
+        this.addDrawableChild_IM(new ButtonWidget(self.width / 2 - 100, y + spacingY, 200, 20, Text.translatable("island-menu.menu,join"), (button) -> {
+            ServerAddress serverAddress = ServerAddress.parse("play.mccisland.net");
             ServerInfo serverInfo =    new ServerInfo("MCC Island", serverAddress.getAddress(), false);
             ConnectScreen.connect(self, MinecraftClient.getInstance(), serverAddress, serverInfo);
         }, tooltipSupplier)).active = bl;
 
 
-        ((ScreenInvoker) this).callAddDrawableChild(new ButtonWidget(self.width / 2 - 100, y + spacingY * 2, 200, 20, Text.translatable("menu.multiplayer"), (button) -> {
+        this.addDrawableChild_IM(new ButtonWidget(self.width / 2 - 100, y + spacingY * 2, 200, 20, Text.translatable("menu.multiplayer"), (button) -> {
             Screen screen = MinecraftClient.getInstance().options.skipMultiplayerWarning ? new MultiplayerScreen(self) : new MultiplayerWarningScreen(self);
-            MinecraftClient.getInstance().setScreen((Screen)screen);
+            MinecraftClient.getInstance().setScreen(screen);
         }, tooltipSupplier)).active = bl;
     }
 }

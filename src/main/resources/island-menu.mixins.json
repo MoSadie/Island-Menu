@@ -7,7 +7,7 @@
   ],
   "client": [
     "TitleScreenMixin",
-    "ScreenInvoker",
+    "ScreenMixin",
     "TitleScreenInvoker"
   ],
   "injectors": {
