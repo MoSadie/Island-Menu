@@ -22,12 +22,12 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build --no-daemon
     
-    # - name: Publish
-    #   uses: Kir-Antipov/mc-publish@v3.0
-    #   with:
-    #     version-type: release
+    - name: Publish
+      uses: Kir-Antipov/mc-publish@v3.0
+      with:
+        version-type: release
 
-    #     github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
 
     #     curseforge-id: 0
     #     curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
