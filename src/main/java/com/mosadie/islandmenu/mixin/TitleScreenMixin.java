@@ -64,6 +64,7 @@ public abstract class TitleScreenMixin extends Screen {
         this.addDrawableChild(new ButtonWidget(self.width / 2 - 100, y + spacingY, 200, 20, Text.translatable("island-menu.menu,join"), (button) -> {
             ServerAddress serverAddress = ServerAddress.parse("play.mccisland.net");
             ServerInfo serverInfo =    new ServerInfo("MCC Island", serverAddress.getAddress(), false);
+            serverInfo.setResourcePackPolicy(ServerInfo.ResourcePackPolicy.ENABLED);
             ConnectScreen.connect(self, MinecraftClient.getInstance(), serverAddress, serverInfo);
         }, tooltipSupplier)).active = bl;
 
