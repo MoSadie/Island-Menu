@@ -23,7 +23,7 @@ jobs:
       run: ./gradlew build --no-daemon
     
     - name: Publish
-      uses: Kir-Antipov/mc-publish@v3.0
+      uses: Kir-Antipov/mc-publish@v3.2
       with:
         version-type: release
 

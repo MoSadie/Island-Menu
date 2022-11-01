@@ -8,12 +8,12 @@ import org.slf4j.LoggerFactory;
 @net.fabricmc.api.Environment(net.fabricmc.api.EnvType.CLIENT)
 public class IslandMenuClient implements ClientModInitializer {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger("island-menu");
+    public static final Logger LOGGER = LoggerFactory.getLogger(getModID());
 
     private final static String[] splashOptions = {
             "Set Sail Today!",
             "Enjoy your island vacation!",
-            "Get the latest Island news at mccisland.net!",
+            "Get the latest news at mccisland.net!",
             "See live MCC stats at mcc.live!",
             "Support the Red Rabbits!",
             "Support the Orange Ocelots!",
@@ -30,8 +30,12 @@ public class IslandMenuClient implements ClientModInitializer {
         return splashOptions[Random.create().nextBetweenExclusive(0, splashOptions.length)];
     }
 
+    public static String getModID() {
+        return "island-menu";
+    }
+
     @Override
     public void onInitializeClient() {
-        LOGGER.info("Init Island Menu Mod!");
+        LOGGER.info("Island Menu Initialized!");
     }
 }
