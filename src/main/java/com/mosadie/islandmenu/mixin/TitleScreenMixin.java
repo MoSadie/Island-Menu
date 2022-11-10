@@ -24,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Consumer;
 
@@ -32,10 +33,16 @@ public abstract class TitleScreenMixin extends Screen {
     @Shadow @Nullable private String splashText;
 
     @Final @Mutable
-    @Shadow @Nullable public static CubeMapRenderer PANORAMA_CUBE_MAP = new CubeMapRenderer(new Identifier(IslandMenuClient.getModID(), "textures/gui/title/background/panorama"));
+    @Shadow @Nullable public static CubeMapRenderer PANORAMA_CUBE_MAP = new CubeMapRenderer(new Identifier(IslandMenuClient.getModID(), "textures/gui/title/background/" + IslandMenuClient.menuTheme.getPath() + "/panorama"));
 
     protected TitleScreenMixin(Text title) {
         super(title);
+    }
+
+    @Inject(method = "areRealmsNotificationsEnabled", at = @At("HEAD"), cancellable = true)
+    private void injectRealmsNotifications(CallbackInfoReturnable<Boolean> info) {
+        info.setReturnValue(false);
+        info.cancel();
     }
 
     @Inject(method = "init()V", at = @At("HEAD"))
