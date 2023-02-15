@@ -9,10 +9,10 @@ import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerWarningScreen;
 import net.minecraft.client.gui.screen.world.SelectWorldScreen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -25,8 +25,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.function.Consumer;
 
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin extends Screen {
@@ -52,33 +50,45 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Redirect(method = "init()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/TitleScreen;initWidgetsNormal(II)V"))
     private void redirectInitWidgetsNormal(TitleScreen self, int y, int spacingY) {
-        this.addDrawableChild(new ButtonWidget(self.width / 2 - 100, y, 200, 20, Text.translatable("menu.singleplayer"), (button) -> {
-            MinecraftClient.getInstance().setScreen(new SelectWorldScreen(self));
-        }));
+        ButtonWidget.Builder singlePlayerButtonWidgetBuilder = ButtonWidget.builder(Text.translatable("menu.singleplayer"), (button -> {
+            MinecraftClient.getInstance().setScreen(new SelectWorldScreen((self)));
+        }))
+                .size(200, 20)
+                .position(self.width / 2 - 100, y);
 
-        final Text text = ((TitleScreenInvoker) this).invokeGetMultiplayerDisabledText();
-        boolean bl = text == null;
-        ButtonWidget.TooltipSupplier tooltipSupplier = text == null ? ButtonWidget.EMPTY : new ButtonWidget.TooltipSupplier() {
-            public void onTooltip(ButtonWidget buttonWidget, MatrixStack matrixStack, int i, int j) {
-                self.renderOrderedTooltip(matrixStack, MinecraftClient.getInstance().textRenderer.wrapLines(text, Math.max(self.width / 2 - 43, 170)), i, j);
-            }
+        this.addDrawableChild(singlePlayerButtonWidgetBuilder.build());
 
-            public void supply(Consumer<Text> consumer) {
-                consumer.accept(text);
-            }
-        };
+        final Text disabledText = ((TitleScreenInvoker) this).invokeGetMultiplayerDisabledText();
+        boolean isDisabled = disabledText != null;
 
-        this.addDrawableChild(new ButtonWidget(self.width / 2 - 100, y + spacingY, 200, 20, Text.translatable("island-menu.menu,join"), (button) -> {
+        Tooltip tooltip = Tooltip.of(disabledText);
+
+        ButtonWidget.Builder joinIslandButtonWidgetBuilder = ButtonWidget.builder(Text.translatable("island-menu.menu.join"), (button) -> {
             ServerAddress serverAddress = ServerAddress.parse("play.mccisland.net");
             ServerInfo serverInfo =    new ServerInfo("MCC Island", serverAddress.getAddress(), false);
             serverInfo.setResourcePackPolicy(ServerInfo.ResourcePackPolicy.ENABLED);
             ConnectScreen.connect(self, MinecraftClient.getInstance(), serverAddress, serverInfo);
-        }, tooltipSupplier)).active = bl;
+        }).position(self.width / 2 - 100, y + spacingY).size(200, 20);
 
+        if (isDisabled) {
+            joinIslandButtonWidgetBuilder.tooltip(tooltip);
+        }
 
-        this.addDrawableChild(new ButtonWidget(self.width / 2 - 100, y + spacingY * 2, 200, 20, Text.translatable("menu.multiplayer"), (button) -> {
+        ButtonWidget joinIslandButtonWidget = joinIslandButtonWidgetBuilder.build();
+        joinIslandButtonWidget.active = !isDisabled;
+        this.addDrawableChild(joinIslandButtonWidgetBuilder.build());
+
+        ButtonWidget.Builder multiplayerButtonWidgetBuilder = ButtonWidget.builder(Text.translatable("menu.multiplayer"), button -> {
             Screen screen = MinecraftClient.getInstance().options.skipMultiplayerWarning ? new MultiplayerScreen(self) : new MultiplayerWarningScreen(self);
             MinecraftClient.getInstance().setScreen(screen);
-        }, tooltipSupplier)).active = bl;
+        }).position(self.width / 2 - 100, y + spacingY * 2).size(200, 20);
+
+        if (isDisabled)
+            multiplayerButtonWidgetBuilder.tooltip(tooltip);
+
+        ButtonWidget multiplayerButtonWidget = multiplayerButtonWidgetBuilder.build();
+        multiplayerButtonWidget.active = !isDisabled;
+
+        this.addDrawableChild(multiplayerButtonWidget);
     }
 }

@@ -4,7 +4,8 @@ import java.util.Calendar;
 
 public enum MenuTheme {
     NORMAL(-1, -1, "normal"),
-    HALLOWEEN(Calendar.NOVEMBER, 9, "halloween");
+    HALLOWEEN(Calendar.NOVEMBER, 9, "halloween"),
+    WINTER(Calendar.DECEMBER, 25, "winter");
 
     private final int month;
     private final int day;
