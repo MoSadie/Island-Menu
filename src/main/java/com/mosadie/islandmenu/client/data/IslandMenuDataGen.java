@@ -7,6 +7,7 @@ public class IslandMenuDataGen implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
-        pack.addProvider(IslandMenuLangProvider::new);
+        pack.addProvider(IslandMenuEnLangProvider::new);
+        pack.addProvider(IslandMenuHuLangProvider::new);
     }
 }
