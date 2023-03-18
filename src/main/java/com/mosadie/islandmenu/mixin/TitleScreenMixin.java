@@ -37,7 +37,7 @@ public abstract class TitleScreenMixin extends Screen {
         super(title);
     }
 
-    @Inject(method = "areRealmsNotificationsEnabled", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "isRealmsNotificationsGuiDisplayed", at = @At("HEAD"), cancellable = true)
     private void injectRealmsNotifications(CallbackInfoReturnable<Boolean> info) {
         info.setReturnValue(false);
         info.cancel();
