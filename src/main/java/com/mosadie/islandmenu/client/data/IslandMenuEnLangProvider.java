@@ -14,11 +14,15 @@ public class IslandMenuEnLangProvider extends FabricLanguageProvider {
 
         translationBuilder.add("text.autoconfig.island-menu.title", "Island Menu Settings");
 
+        translationBuilder.add("text.autoconfig.island-menu.option.supportingTeam", "Team to support");
+        translationBuilder.add("text.autoconfig.island-menu.option.supportingTeam.@Tooltip", "Show your support for a team in the title screen's splash text, chooses the specified team instead of randomly picking a team when required.");
+
         translationBuilder.add("text.autoconfig.island-menu.option.joinButtonOptions", "Join Button Settings");
 
         translationBuilder.add("text.autoconfig.island-menu.option.joinButtonOptions.overrideJoinButton", "Override Join MCCi Button?");
         translationBuilder.add("text.autoconfig.island-menu.option.joinButtonOptions.buttonTextOverride", "Join Button Text");
-        translationBuilder.add("text.autoconfig.island-menu.option.joinButtonOptions.buttonServerNameOverride", "Join Button Server Name (Mainly used by ReplayMod)");
+        translationBuilder.add("text.autoconfig.island-menu.option.joinButtonOptions.buttonServerNameOverride", "Join Button Server Name");
+        translationBuilder.add("text.autoconfig.island-menu.option.joinButtonOptions.buttonServerNameOverride.@Tooltip", "Mainly used by mods such as ReplayMod to track what server you were on.");
         translationBuilder.add("text.autoconfig.island-menu.option.joinButtonOptions.buttonServerAddressOverride", "Join Button Server Address");
 
         translationBuilder.add("text.autoconfig.island-menu.option.themeOptions", "Theme Settings");
@@ -31,6 +35,9 @@ public class IslandMenuEnLangProvider extends FabricLanguageProvider {
 
         translationBuilder.add("text.autoconfig.island-menu.option.splashOptions.overrideSplash", "Override Splash Text?");
         translationBuilder.add("text.autoconfig.island-menu.option.splashOptions.overrideSplashText", "Splash Message");
+
+        translationBuilder.add("text.autoconfig.island-menu.option.devOptions", "Developer Settings");
+        translationBuilder.add("text.autoconfig.island-menu.option.devOptions.apiUrl", "MCC API Base URL");
 
     }
 }
