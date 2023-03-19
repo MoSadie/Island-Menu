@@ -21,6 +21,9 @@
     ],
     "fabric-datagen": [
       "com.mosadie.islandmenu.client.data.IslandMenuDataGen"
+    ],
+    "modmenu": [
+      "com.mosadie.islandmenu.client.IslandMenuModMenuIntegration"
     ]
   },
   "mixins": [
@@ -29,6 +32,8 @@
   "depends": {
     "fabricloader": ">=0.14.9",
     "fabric-api": ">=0.62.0",
-    "minecraft": "1.19.4"
+    "minecraft": "1.19.4",
+    "modmenu": ">=6.1.0-rc.4",
+    "cloth-config": ">=10.0.96"
   }
 }
