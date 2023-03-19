@@ -1,6 +1,8 @@
 package com.mosadie.islandmenu.mixin;
 
 import com.mosadie.islandmenu.client.IslandMenuClient;
+import com.terraformersmc.modmenu.ModMenu;
+import com.terraformersmc.modmenu.api.ModMenuApi;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.CubeMapRenderer;
 import net.minecraft.client.gui.screen.ConnectScreen;
@@ -13,6 +15,7 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
+import net.minecraft.client.realms.gui.screen.RealmsNotificationsScreen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -31,28 +34,35 @@ public abstract class TitleScreenMixin extends Screen {
     @Shadow @Nullable private String splashText;
 
     @Final @Mutable
-    @Shadow @Nullable public static CubeMapRenderer PANORAMA_CUBE_MAP = new CubeMapRenderer(new Identifier(IslandMenuClient.getModID(), "textures/gui/title/background/" + IslandMenuClient.menuTheme.getPath() + "/panorama"));
+    @Shadow @Nullable public static CubeMapRenderer PANORAMA_CUBE_MAP = new CubeMapRenderer(new Identifier(IslandMenuClient.MOD_ID, "textures/gui/title/background/" + IslandMenuClient.getTheme().getPath() + "/panorama"));
+
+    @Shadow @Nullable private RealmsNotificationsScreen realmsNotificationGui;
 
     protected TitleScreenMixin(Text title) {
         super(title);
     }
 
     @Inject(method = "isRealmsNotificationsGuiDisplayed", at = @At("HEAD"), cancellable = true)
-    private void injectRealmsNotifications(CallbackInfoReturnable<Boolean> info) {
+    private void injectRealmNotification(CallbackInfoReturnable<Boolean> info) {
         info.setReturnValue(false);
-        info.cancel();
+    }
+
+    @Inject(method = "onDisplayed", at = @At("HEAD"), cancellable = true)
+    private void injectOnDisplayed(CallbackInfo ci) {
+        super.onDisplayed();
+        ci.cancel();
     }
 
     @Inject(method = "init()V", at = @At("HEAD"))
     private void injectSplashText(CallbackInfo info) {
-        this.splashText = IslandMenuClient.getRandomSplashText();
+        this.splashText = IslandMenuClient.getSplashText();
     }
 
     @Redirect(method = "init()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/TitleScreen;initWidgetsNormal(II)V"))
     private void redirectInitWidgetsNormal(TitleScreen self, int y, int spacingY) {
         ButtonWidget.Builder singlePlayerButtonWidgetBuilder = ButtonWidget.builder(Text.translatable("menu.singleplayer"), (button -> {
-            MinecraftClient.getInstance().setScreen(new SelectWorldScreen((self)));
-        }))
+                    MinecraftClient.getInstance().setScreen(new SelectWorldScreen((self)));
+                }))
                 .size(200, 20)
                 .position(self.width / 2 - 100, y);
 
@@ -63,9 +73,9 @@ public abstract class TitleScreenMixin extends Screen {
 
         Tooltip tooltip = Tooltip.of(disabledText);
 
-        ButtonWidget.Builder joinIslandButtonWidgetBuilder = ButtonWidget.builder(Text.translatable("island-menu.menu.join"), (button) -> {
-            ServerAddress serverAddress = ServerAddress.parse("play.mccisland.net");
-            ServerInfo serverInfo =    new ServerInfo("MCC Island", serverAddress.getAddress(), false);
+        ButtonWidget.Builder joinIslandButtonWidgetBuilder = ButtonWidget.builder(IslandMenuClient.getButtonText(), (button) -> {
+            ServerAddress serverAddress = ServerAddress.parse(IslandMenuClient.getButtonServerAddress());
+            ServerInfo serverInfo = new ServerInfo(IslandMenuClient.getButtonServerName(), serverAddress.getAddress(), false);
             serverInfo.setResourcePackPolicy(ServerInfo.ResourcePackPolicy.ENABLED);
             ConnectScreen.connect(self, MinecraftClient.getInstance(), serverAddress, serverInfo);
         }).position(self.width / 2 - 100, y + spacingY).size(200, 20);
@@ -90,5 +100,15 @@ public abstract class TitleScreenMixin extends Screen {
         multiplayerButtonWidget.active = !isDisabled;
 
         this.addDrawableChild(multiplayerButtonWidget);
+
+        ButtonWidget.Builder modsButtonWidgetBuilder = ButtonWidget.builder(ModMenu.createModsButtonText(true), button -> {
+            Screen modsScreen = ModMenuApi.createModsScreen(MinecraftClient.getInstance().currentScreen);
+            MinecraftClient.getInstance().setScreen(modsScreen);
+        }).position(self.width / 2 + 110, y + spacingY).size(50, 20);
+
+        ButtonWidget modsButtonWidget = modsButtonWidgetBuilder.build();
+
+        this.addDrawableChild(modsButtonWidget);
+
     }
 }
