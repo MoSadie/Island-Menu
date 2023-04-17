@@ -104,7 +104,7 @@ public abstract class TitleScreenMixin extends Screen {
         ButtonWidget.Builder modsButtonWidgetBuilder = ButtonWidget.builder(ModMenu.createModsButtonText(true), button -> {
             Screen modsScreen = ModMenuApi.createModsScreen(MinecraftClient.getInstance().currentScreen);
             MinecraftClient.getInstance().setScreen(modsScreen);
-        }).position(self.width / 2 + 110, y + spacingY).size(50, 20);
+        }).position(self.width / 2 + 104, y + spacingY).size(50, 20);
 
         ButtonWidget modsButtonWidget = modsButtonWidgetBuilder.build();
 
