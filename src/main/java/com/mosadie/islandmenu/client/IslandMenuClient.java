@@ -152,6 +152,9 @@ public class IslandMenuClient implements ClientModInitializer {
                                 return splashOptions[0];
                         }
 
+                        if (player == null || player.getUsername() == null)
+                            return splashOptions[0];
+
                         EventInfo eventInfo = mccApi.getEventInfo();
                         String eventString = "";
                         if (eventInfo != null && eventInfo.getData().getDate().after(new Date())) {
