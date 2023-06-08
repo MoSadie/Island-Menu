@@ -7,6 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.CubeMapRenderer;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.SplashTextRenderer;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerWarningScreen;
@@ -31,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin extends Screen {
-    @Shadow @Nullable private String splashText;
+    @Shadow @Nullable private SplashTextRenderer splashText;
 
     @Final @Mutable
     @Shadow @Nullable public static CubeMapRenderer PANORAMA_CUBE_MAP = new CubeMapRenderer(new Identifier(IslandMenuClient.MOD_ID, "textures/gui/title/background/" + IslandMenuClient.getTheme().getPath() + "/panorama"));
@@ -55,7 +56,7 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Inject(method = "init()V", at = @At("HEAD"))
     private void injectSplashText(CallbackInfo info) {
-        this.splashText = IslandMenuClient.getSplashText();
+        this.splashText = new SplashTextRenderer(IslandMenuClient.getSplashText());
     }
 
     @Redirect(method = "init()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/TitleScreen;initWidgetsNormal(II)V"))
@@ -77,7 +78,7 @@ public abstract class TitleScreenMixin extends Screen {
             ServerAddress serverAddress = ServerAddress.parse(IslandMenuClient.getButtonServerAddress());
             ServerInfo serverInfo = new ServerInfo(IslandMenuClient.getButtonServerName(), serverAddress.getAddress(), false);
             serverInfo.setResourcePackPolicy(ServerInfo.ResourcePackPolicy.ENABLED);
-            ConnectScreen.connect(self, MinecraftClient.getInstance(), serverAddress, serverInfo);
+            ConnectScreen.connect(self, MinecraftClient.getInstance(), serverAddress, serverInfo, false);
         }).position(self.width / 2 - 100, y + spacingY).size(200, 20);
 
         if (isDisabled) {
