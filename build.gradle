@@ -44,6 +44,7 @@ repositories {
 
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases/" }
+    mavenLocal()
 }
 
 dependencies {
@@ -59,6 +60,8 @@ dependencies {
     }
 
     modApi("com.terraformersmc:modmenu:${project.mod_menu_version}")
+
+    include(modApi("com.mosadie:ServerMainMenu-Lib:${project.ssm_lib_version}"))
 }
 
 processResources {
