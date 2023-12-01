@@ -1,23 +1,29 @@
 package com.mosadie.islandmenu.client;
 
+import com.mosadie.islandmenu.client.theme.HalloweenTheme;
+import com.mosadie.islandmenu.client.theme.NormalTheme;
+import com.mosadie.islandmenu.client.theme.WinterTheme;
 import com.mosadie.islandmenu.mccapi.EventInfo;
 import com.mosadie.islandmenu.mccapi.MCCApi;
 import com.mosadie.islandmenu.mccapi.ParticipantsInfo;
 import com.mosadie.islandmenu.mccapi.Teams;
+import com.mosadie.servermainmenu.client.ServerMainMenuLibClient;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -30,51 +36,10 @@ public class IslandMenuClient implements ClientModInitializer {
 
     private static MCCApi mccApi;
 
-    private static MenuTheme selectTheme() {
-        LOGGER.info("Selecting Menu Theme!");
+    private static NormalTheme normalTheme = new NormalTheme();
+    private static HalloweenTheme halloweenTheme = new HalloweenTheme();
 
-        if (config != null && config.themeOptions.overrideTheme) {
-            LOGGER.info("Theme selected via override: " + config.themeOptions.theme.name());
-            return config.themeOptions.theme;
-        }
-
-        Calendar calendar = Calendar.getInstance();
-
-        MenuTheme selectedTheme = MenuTheme.NORMAL;
-
-        Random random = Random.create();
-
-
-        for(MenuTheme theme : MenuTheme.values()) {
-            if (calendar.get(Calendar.MONTH) == theme.getMonth() && calendar.get(Calendar.DAY_OF_MONTH) <= theme.getDay()) {
-                LOGGER.info("Possible Theme Found: " + theme.name());
-
-                int roll = random.nextBetween(1, theme.getDay());
-
-                // If the roll is less than the day of the month, set as the theme to select.
-                // The goal is as the dates get closer, the theme appears more often.
-                if (roll <= calendar.get(Calendar.DAY_OF_MONTH)) {
-                    LOGGER.info("Successfully rolled " + roll + "/" + theme.getDay() + " (compared to " + calendar.get(Calendar.DAY_OF_MONTH) + ") for theme");
-                    selectedTheme = theme;
-                } else {
-                    LOGGER.info("Failed rolled " + roll + "/" + theme.getDay() + " (compared to  " + calendar.get(Calendar.DAY_OF_MONTH) + ") for theme");
-                }
-            }
-        }
-
-        LOGGER.info("Selected Menu Theme: " + selectedTheme.name());
-        return selectedTheme;
-    }
-
-    private static MenuTheme menuTheme = null;
-
-    public static MenuTheme getTheme() {
-        if (menuTheme != null) {
-            return menuTheme;
-        }
-
-        return MenuTheme.NORMAL;
-    }
+    private static WinterTheme winterTheme = new WinterTheme();
 
     private final static String MCC_DATE_SPLASH = "island-menu.mccdatesplash";
     private final static String MCC_PLAYER_SPLASH = "island-menu.playersplash";
@@ -99,9 +64,6 @@ public class IslandMenuClient implements ClientModInitializer {
     };
 
     public static String getSplashText() {
-        if (config != null && config.splashOptions.overrideSplash) {
-            return config.splashOptions.overrideSplashText;
-        }
         String splash =  splashOptions[Random.create().nextBetweenExclusive(0, splashOptions.length)];
 
         switch(splash) {
@@ -198,32 +160,26 @@ public class IslandMenuClient implements ClientModInitializer {
     private static IslandMenuConfig config;
 
     public static Text getButtonText() {
-        if (config != null && config.joinButtonOptions.overrideJoinButton) {
-            return Text.of(config.joinButtonOptions.buttonTextOverride);
-        }
-
         return Text.translatable("island-menu.menu.join");
     }
 
     public static String getButtonServerName() {
-        if (config != null && config.joinButtonOptions.overrideJoinButton) {
-            return config.joinButtonOptions.buttonServerNameOverride;
-        }
-
         return "MCC Island";
     }
 
     public static String getButtonServerAddress() {
-        if (config != null && config.joinButtonOptions.overrideJoinButton) {
-            return config.joinButtonOptions.buttonServerAddressOverride;
-        }
-
         return "play.mccisland.net";
     }
 
     @Override
     public void onInitializeClient() {
         LOGGER.info("Initializing Island Menu...");
+
+        LOGGER.info("Registering Theme...");
+
+        Registry.register(ServerMainMenuLibClient.registry, new Identifier(IslandMenuClient.MOD_ID, "normal"), normalTheme);
+        Registry.register(ServerMainMenuLibClient.registry, new Identifier(IslandMenuClient.MOD_ID, "halloween"), halloweenTheme);
+        Registry.register(ServerMainMenuLibClient.registry, new Identifier(IslandMenuClient.MOD_ID, "winter"), winterTheme);
 
         LOGGER.info("Configuring Config...");
 
@@ -232,8 +188,6 @@ public class IslandMenuClient implements ClientModInitializer {
         AutoConfig.getConfigHolder(IslandMenuConfig.class).registerSaveListener(IslandMenuClient::onConfigSave);
 
         config = AutoConfig.getConfigHolder(IslandMenuConfig.class).getConfig();
-
-        menuTheme = selectTheme();
 
         LOGGER.info("Requesting information from MCC API...");
 
@@ -251,8 +205,6 @@ public class IslandMenuClient implements ClientModInitializer {
         LOGGER.info("Updating config!");
 
 //        config = islandMenuConfig;
-
-        menuTheme = selectTheme();
 
         if (mccApi == null || !mccApi.getBaseUrl().equalsIgnoreCase(config.devOptions.apiUrl))
             mccApi = new MCCApi(config.devOptions.apiUrl);
