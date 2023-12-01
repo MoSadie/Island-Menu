@@ -12,7 +12,7 @@ public class WinterTheme extends NormalTheme {
 
     @Override
     public boolean rollOdds() {
-        return Util.rollOddsMonthDay(12, 25, 25, 5);
+        return Util.rollOddsMonthDay(12, 25, 25, 10);
     }
 
     @Override
