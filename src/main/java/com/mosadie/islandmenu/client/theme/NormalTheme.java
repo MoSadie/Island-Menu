@@ -29,7 +29,7 @@ public class NormalTheme implements MenuTheme {
 
     @Override
     public ServerInfo getServerInfo() {
-        ServerInfo info = new ServerInfo("MCC Island", "play.mccisland.net", false);
+        ServerInfo info = new ServerInfo("MCC Island", "play.mccisland.net", ServerInfo.ServerType.OTHER);
         return info;
     }
 
