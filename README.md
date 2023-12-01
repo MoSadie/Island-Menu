@@ -23,4 +23,5 @@ All of the previous features mentioned above can be configured. You can overwrit
 
 ## Known Mod Compatibility:
 - [Replay Mod](https://replaymod.com/)'s button appears correctly.
+- [Mod Menu](https://modrinth.com/mod/modmenu)'s button has been moved.
 - If you encounter an issue or have any suggestions, [please let me know](https://github.com/MoSadie/Island-Menu/issues)!
