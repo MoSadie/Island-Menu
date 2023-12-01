@@ -1,6 +1,6 @@
 # Island-Menu
 
-Modifies the main menu to be themed around [MCC Island](https://mccisland.net/). Requires [Mod Menu](https://modrinth.com/mod/modmenu) and [Cloth Config](https://modrinth.com/mod/cloth-config). Embeds [ServerMainMenu Lib](https://github.com/MoSadie/ServerMainMenu-Lib).
+Modifies the main menu to be themed around [MCC Island](https://mccisland.net/). Requires [Mod Menu](https://modrinth.com/mod/modmenu), [Cloth Config](https://modrinth.com/mod/cloth-config), and [ServerMainMenu Lib](https://github.com/MoSadie/ServerMainMenu-Lib)
 
 ## Features:
 

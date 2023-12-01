@@ -72,8 +72,8 @@ dependencies {
 
     modApi("com.terraformersmc:modmenu:${project.mod_menu_version}")
 
-    //include(modApi("com.mosadie:ServerMainMenu-Lib:${project.smm_lib_version}"))
-    include(modApi("maven.modrinth:smm-lib:${project.smm_lib_version}"))
+    //modApi("com.mosadie:ServerMainMenu-Lib:${project.smm_lib_version}")
+    modApi("maven.modrinth:smm-lib:${project.smm_lib_version}")
 }
 
 processResources {
