@@ -27,11 +27,11 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.14.9",
+    "fabricloader": ">=0.15.0",
     "fabric-api": ">=0.91.1",
     "minecraft": "~1.20.2",
     "modmenu": ">=8.0.0",
     "cloth-config": ">=12.0.111",
-    "smm-lib": ">=1.0.0"
+    "smm-lib": ">=2.0.0"
   }
 }

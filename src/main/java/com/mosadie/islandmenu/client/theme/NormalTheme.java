@@ -2,6 +2,7 @@ package com.mosadie.islandmenu.client.theme;
 
 import com.mosadie.islandmenu.client.IslandMenuClient;
 import com.mosadie.servermainmenu.api.MenuTheme;
+import com.mosadie.servermainmenu.api.Util;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -23,14 +24,13 @@ public class NormalTheme implements MenuTheme {
     }
 
     @Override
-    public Text getJoinServerButtonText() {
+    public Text getQuickJoinButtonText() {
         return Text.translatable("island-menu.menu.join");
     }
 
     @Override
-    public ServerInfo getServerInfo() {
-        ServerInfo info = new ServerInfo("MCC Island", "play.mccisland.net", ServerInfo.ServerType.OTHER);
-        return info;
+    public void onQuickJoinClicked() {
+        Util.joinServer("MCC Island", "play.mccisland.net");
     }
 
     @Override
@@ -41,5 +41,25 @@ public class NormalTheme implements MenuTheme {
     @Override
     public int getPriority() {
         return 0;
+    }
+
+    @Override
+    public boolean isSingleplayerVisible() {
+        return false;
+    }
+
+    @Override
+    public boolean isMultiplayerVisible() {
+        return false;
+    }
+
+    @Override
+    public boolean isQuickJoinVisible() {
+        return true;
+    }
+
+    @Override
+    public boolean isModsVisible() {
+        return true;
     }
 }
