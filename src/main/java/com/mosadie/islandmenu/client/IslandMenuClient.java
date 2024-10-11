@@ -177,9 +177,9 @@ public class IslandMenuClient implements ClientModInitializer {
 
         LOGGER.info("Registering Theme...");
 
-        Registry.register(ServerMainMenuLibClient.registry, new Identifier(IslandMenuClient.MOD_ID, "normal"), normalTheme);
-        Registry.register(ServerMainMenuLibClient.registry, new Identifier(IslandMenuClient.MOD_ID, "halloween"), halloweenTheme);
-        Registry.register(ServerMainMenuLibClient.registry, new Identifier(IslandMenuClient.MOD_ID, "winter"), winterTheme);
+        Registry.register(ServerMainMenuLibClient.registry, Identifier.of(IslandMenuClient.MOD_ID, "normal"), normalTheme);
+        Registry.register(ServerMainMenuLibClient.registry, Identifier.of(IslandMenuClient.MOD_ID, "halloween"), halloweenTheme);
+        Registry.register(ServerMainMenuLibClient.registry, Identifier.of(IslandMenuClient.MOD_ID, "winter"), winterTheme);
 
         LOGGER.info("Configuring Config...");
 

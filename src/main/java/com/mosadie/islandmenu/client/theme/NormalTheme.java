@@ -15,7 +15,7 @@ public class NormalTheme implements MenuTheme {
 
     @Override
     public Identifier getPanorama() {
-        return new Identifier(IslandMenuClient.MOD_ID, "textures/gui/title/background/"+ getId() + "/panorama");
+        return Identifier.of(IslandMenuClient.MOD_ID, "textures/gui/title/background/"+ getId() + "/panorama");
     }
 
     @Override

@@ -2,14 +2,17 @@ package com.mosadie.islandmenu.client.data;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
+import net.minecraft.registry.RegistryWrapper;
+
+import java.util.concurrent.CompletableFuture;
 
 public class IslandMenuHuLangProvider extends FabricLanguageProvider {
-    protected IslandMenuHuLangProvider(FabricDataOutput dataOutput) {
-        super(dataOutput, "hu_hu");
+    protected IslandMenuHuLangProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
+        super(dataOutput, "hu_hu", registryLookup);
     }
 
     @Override
-    public void generateTranslations(TranslationBuilder translationBuilder) {
+    public void generateTranslations(RegistryWrapper.WrapperLookup wrapperLookup, TranslationBuilder translationBuilder) {
         translationBuilder.add("island-menu.menu.join", "Csatlakozz az MCC Islandre!");
 
         translationBuilder.add("text.autoconfig.island-menu.title", "Island Menu Beállítások");
