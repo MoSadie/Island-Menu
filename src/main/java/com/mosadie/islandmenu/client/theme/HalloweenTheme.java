@@ -2,8 +2,6 @@ package com.mosadie.islandmenu.client.theme;
 
 import com.mosadie.servermainmenu.api.Util;
 
-import java.util.Calendar;
-
 public class HalloweenTheme extends NormalTheme {
 
     @Override
