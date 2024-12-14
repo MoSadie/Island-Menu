@@ -30,8 +30,8 @@
     "fabricloader": ">=0.15.10",
     "fabric-api": ">=0.91.1",
     "minecraft": "~1.21",
-    "modmenu": ">=8.0.0",
-    "cloth-config": ">=12.0.111",
-    "smm-lib": ">=2.0.3"
+    "modmenu": ">=13.0.0-beta.1",
+    "cloth-config": ">=17.0.144",
+    "smm-lib": ">=2.0.4"
   }
 }

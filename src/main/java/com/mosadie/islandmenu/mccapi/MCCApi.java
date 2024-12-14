@@ -4,12 +4,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.mosadie.islandmenu.client.IslandMenuClient;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Optional;
 
 public class MCCApi {
 
@@ -21,9 +24,10 @@ public class MCCApi {
     private EventInfo eventInfoCache;
     private ParticipantsInfo participantsInfoCache;
 
+    private final String modVersion;
+
     public MCCApi() {
         this("https://api.mcchampionship.com");
-        //this("https://a2fbee59-441a-4c76-8378-9669cc2646d6.mock.pstmn.io");
     }
 
     public MCCApi(String baseUrl) {
@@ -34,6 +38,13 @@ public class MCCApi {
 
         eventInfoCache = null;
         participantsInfoCache = null;
+
+        Optional<ModContainer> modContainer = FabricLoader.getInstance().getModContainer(IslandMenuClient.MOD_ID);
+        if (FabricLoader.getInstance().getModContainer(IslandMenuClient.MOD_ID).isPresent()) {
+            modVersion = FabricLoader.getInstance().getModContainer(IslandMenuClient.MOD_ID).get().getMetadata().getVersion().getFriendlyString();
+        } else {
+            modVersion = "Unknown";
+        }
     }
 
     public String getBaseUrl() {
@@ -47,7 +58,7 @@ public class MCCApi {
         }
 
         try {
-            HttpRequest request = HttpRequest.newBuilder(URI.create(baseUrl + "/v1/event")).header("accept", "application/json").GET().build();
+            HttpRequest request = HttpRequest.newBuilder(URI.create(baseUrl + "/v1/event")).header("accept", "application/json").header("User-Agent", "IslandMenu/MoSadie/" + modVersion).GET().build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
@@ -74,7 +85,7 @@ public class MCCApi {
         }
 
         try {
-            HttpRequest request = HttpRequest.newBuilder(URI.create(baseUrl + "/v1/participants")).header("accept", "application/json").GET().build();
+            HttpRequest request = HttpRequest.newBuilder(URI.create(baseUrl + "/v1/participants")).header("accept", "application/json").header("User-Agent", "IslandMenu/MoSadie/" + modVersion).GET().build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 

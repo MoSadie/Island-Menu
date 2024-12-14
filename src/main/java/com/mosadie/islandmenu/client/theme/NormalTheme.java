@@ -3,7 +3,6 @@ package com.mosadie.islandmenu.client.theme;
 import com.mosadie.islandmenu.client.IslandMenuClient;
 import com.mosadie.servermainmenu.api.MenuTheme;
 import com.mosadie.servermainmenu.api.Util;
-import net.minecraft.client.network.ServerInfo;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
